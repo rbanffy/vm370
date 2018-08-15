@@ -1,6 +1,7 @@
-FROM ubuntu:latest
+FROM ubuntu:bionic
 
 RUN apt update && \
+        apt dist-upgrade -y && \
         apt install -y --no-install-recommends hercules wget unzip && \
         wget http://www.smrcc.org.uk/members/g4ugm/vm-370/vm370sixpack-1_2.zip && \
         unzip vm370sixpack-1_2.zip && \
