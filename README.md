@@ -9,7 +9,7 @@ Docker image for rbanffy/vm370
 
 To run, use:
 
-```
+```shell
 docker run -it -p 3270:3270 rbanffy/vm370
 ```
 
