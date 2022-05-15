@@ -1,4 +1,4 @@
-.PHONY: build start load
+.PHONY: help build start upload
 .DEFAULT_GOAL := help
 
 SHELL = /bin/sh
