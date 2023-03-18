@@ -6,7 +6,7 @@ RUN apt update && \
         wget http://www.smrcc.org.uk/members/g4ugm/vm-370/vm370sixpack-1_3.zip && \
         unzip vm370sixpack-1_3.zip && \
         apt purge -y wget unzip && \
-        rm -rf /var/lib/apt/lists/* 3270 vm370sixpack-1_2.zip
+        rm -rf /var/lib/apt/lists/* vm370sixpack-1_3.zip
 
 EXPOSE 3270
 

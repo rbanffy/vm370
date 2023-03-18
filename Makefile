@@ -10,7 +10,7 @@ for line in sys.stdin:
 	match = re.match(r'^([a-zA-Z_-]+):.*?## (.*)$$', line)
 	if match:
 		target, help = match.groups()
-		print("%-10s %s" % (target, help))
+		print("%-20s %s" % (target, help))
 endef
 export PRINT_HELP_PYSCRIPT
 
@@ -26,7 +26,7 @@ build: ## Builds the Docker images
 	docker build -t ${USER}/vm370:latest-s390x --platform=linux/s390x .
 	docker build -t ${USER}/vm370:latest-ppc64le --platform=linux/ppc64le .
 
-start: build ## Builds and starts the Docker image
+start: build ## Builds and starts the local arch Docker image
 	docker start -d -p 3270:3270 vm370
 
 upload_images: ## Uploads the docker images
