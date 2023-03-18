@@ -1,4 +1,4 @@
-FROM ubuntu:jammy
+FROM debian:stable-slim
 
 RUN apt update && \
         apt dist-upgrade -y && \
