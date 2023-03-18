@@ -1,4 +1,4 @@
-.PHONY: help build start upload
+.PHONY: help build start upload upload_images
 .DEFAULT_GOAL := help
 
 SHELL = /bin/sh
