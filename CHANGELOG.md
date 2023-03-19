@@ -1,7 +1,11 @@
+## current
+
+- Add a hercules non-privileged user
+
 ## 1.3
 
 - Updated sixpack to 1.3
-- Updated Ubuntu OS to Kinetic
+- Updated base image to Debian slim
 
 ## previous
 
