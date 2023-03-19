@@ -4,7 +4,8 @@ ARG USERNAME=hercules
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
-RUN groupadd --gid $USER_GID $USERNAME && \
+RUN DEBIAN_FRONTEND=noninteractive \
+        groupadd --gid $USER_GID $USERNAME && \
         useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
         apt update && \
         apt dist-upgrade -y && \
