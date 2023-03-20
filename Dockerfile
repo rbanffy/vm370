@@ -21,6 +21,6 @@ RUN DEBIAN_FRONTEND=noninteractive \
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
-EXPOSE 3270
+EXPOSE 3270/TCP
 
 CMD ["hercules", "-f", "sixpack.conf"]
