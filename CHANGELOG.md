@@ -1,5 +1,9 @@
 ## current
 
+- Enable DOS disks
+- Expose only TCP for terminal connection
+- Add comments to build process
+- Avoid APT questions
 - Add a hercules non-privileged user
 
 ## 1.3
