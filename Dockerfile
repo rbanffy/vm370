@@ -14,6 +14,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
         wget http://www.smrcc.org.uk/members/g4ugm/vm-370/vm370sixpack-1_3.zip && \
         unzip vm370sixpack-1_3.zip && \
         chown -R $USERNAME:$USERNAME /home/$USERNAME && \
+        # Remove unwanted files
         apt purge -y wget unzip && \
         rm -rf /var/lib/apt/lists/* vm370sixpack-1_3.zip
 
