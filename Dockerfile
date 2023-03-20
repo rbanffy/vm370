@@ -13,6 +13,9 @@ RUN DEBIAN_FRONTEND=noninteractive \
         cd /home/$USERNAME && \
         wget http://www.smrcc.org.uk/members/g4ugm/vm-370/vm370sixpack-1_3.zip && \
         unzip vm370sixpack-1_3.zip && \
+        # Enable CMS/DOS disks
+        sed -i 's/#06a0/06a0/' sixpack.conf && \
+        sed -i 's/#07a0/07a0/' sixpack.conf && \
         chown -R $USERNAME:$USERNAME /home/$USERNAME && \
         # Remove unwanted files
         apt purge -y wget unzip && \
