@@ -14,17 +14,22 @@ RUN DEBIAN_FRONTEND=noninteractive \
         cd /home/$USERNAME && \
         wget http://www.smrcc.org.uk/members/g4ugm/vm-370/vm370sixpack-1_3.zip && \
         unzip vm370sixpack-1_3.zip && \
-        # Enable CMS/DOS disks
+        # Remove unwanted files.
+        apt purge -y wget unzip && \
+        rm -rf /var/lib/apt/lists/* vm370sixpack-1_3.zip WC3270 && \
+        # Enable CMS/DOS disks.
         sed -i 's/#06a0/06a0/' sixpack.conf && \
         sed -i 's/#07a0/07a0/' sixpack.conf && \
-        chown -R $USERNAME:$USERNAME /home/$USERNAME && \
-        # Remove unwanted files
-        apt purge -y wget unzip && \
-        rm -rf /var/lib/apt/lists/* vm370sixpack-1_3.zip
+        # Enable web UI with the MAINT credentials
+        sed -i 's/#HTTPPORT       8081/HTTPPORT    8081    AUTH MAINT CPCMS/' sixpack.conf && \
+        # Log off the OPERATOR user from the Hercules console
+        echo '/LOGOFF' >> hercules.rc && \
+        chown -R $USERNAME:$USERNAME /home/$USERNAME
 
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
 EXPOSE 3270/TCP
+EXPOSE 8081/TCP
 
 CMD ["hercules", "-f", "sixpack.conf"]
