@@ -1,4 +1,4 @@
-FROM debian:stable-slim
+FROM debian:testing-slim
 
 LABEL maintainer="Ricardo Bánffy <rbanffy@gmail.com>"
 
@@ -10,8 +10,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
         groupadd --gid $USER_GID $USERNAME && \
         useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
         apt update && \
-        # usrmerge is failing to install, so no upgrade on this step.
-        # apt upgrade -y && \
+        apt upgrade -y && \
         apt install -y --no-install-recommends hercules wget unzip && \
         cd /home/$USERNAME && \
         wget http://www.smrcc.org.uk/members/g4ugm/vm-370/vm370sixpack-1_3.zip && \
