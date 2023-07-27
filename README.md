@@ -15,12 +15,20 @@ To build it:
 docker build -t vm370 .
 ```
 
-To run, use:
+To run the image you just built, use:
+
+```shell
+docker run -it -p 3270:3270 -p 8081:8081 vm370
+```
+
+At this point, you can connect your terminals to localhost on port 3278. To
+get to the web console, connect to http://localhost:8081 using the credentials
+for the MAINT user (as published in the Sixpack documentation).
+
+## Running from Docker Hub
+
+To run this image without building it locally, use:
 
 ```shell
 docker run -it -p 3270:3270 -p 8081:8081 rbanffy/vm370
 ```
-
-And connect your terminals to localhost on port 3278. To get to the web console, connect
-to http://localhost:8081 using the credentials for the MAINT user (as published in the
-Sixpack documentation).
