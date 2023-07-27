@@ -1,5 +1,7 @@
 FROM debian:stable-slim
 
+LABEL maintainer="Ricardo Bánffy <rbanffy@gmail.com>"
+
 ARG USERNAME=hercules
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
