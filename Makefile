@@ -38,9 +38,6 @@ build: ## Builds the Docker images
 	docker build -t ${USER}/vm370:${IMAGE_TAG}-ppc64le --platform=linux/ppc64le .
 	docker build -t ${USER}/vm370:${IMAGE_TAG}-s390x --platform=linux/s390x .
 
-start: build ## Builds and starts the local arch Docker image
-	docker start -d -p 3270:3270 vm370
-
 upload_images: ## Uploads the docker images
 	docker image push ${USER}/vm370:${IMAGE_TAG}-amd64
 	docker image push ${USER}/vm370:${IMAGE_TAG}-arm64
