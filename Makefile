@@ -51,7 +51,7 @@ upload_images: ## Uploads the docker images
 upload: upload_images ## Uploads the manifest
 	docker manifest create ${USER}/vm370:${IMAGE_TAG} \
 		--amend ${USER}/vm370:${IMAGE_TAG}-amd64 \
-		--amend ${USER}/vm370:${IMAGE_TAG}-amd64 \
+		--amend ${USER}/vm370:${IMAGE_TAG}-arm64 \
 		--amend ${USER}/vm370:${IMAGE_TAG}-armv6 \
 		--amend ${USER}/vm370:${IMAGE_TAG}-armv7 \
 		--amend ${USER}/vm370:${IMAGE_TAG}-i386 \
