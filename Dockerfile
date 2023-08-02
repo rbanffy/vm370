@@ -3,7 +3,7 @@
 FROM alpine:latest AS builder
 
 RUN apk update && \
-        apk add alpine-sdk automake cmake autoconf libtool linux-headers zlib-dev && \
+        apk add alpine-sdk automake cmake autoconf libtool linux-headers zlib-dev bash && \
         wget https://github.com/SDL-Hercules-390/hyperion/archive/refs/heads/master.zip && \
         unzip master.zip && \
         cd /hyperion-master && \
