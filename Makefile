@@ -56,6 +56,6 @@ upload: upload_images ## Uploads the manifest
 		--amend ${USER}/vm370:${IMAGE_TAG}-armv7 \
 		--amend ${USER}/vm370:${IMAGE_TAG}-i386 \
 		--amend ${USER}/vm370:${IMAGE_TAG}-mips64le \
-		--amend ${USER}/vm370:${IMAGE_TAG}-ppc64le
-		--amend ${USER}/vm370:${IMAGE_TAG}-s390x \
+		--amend ${USER}/vm370:${IMAGE_TAG}-ppc64le \
+		--amend ${USER}/vm370:${IMAGE_TAG}-s390x 
 	docker manifest push ${USER}/vm370:${IMAGE_TAG}
