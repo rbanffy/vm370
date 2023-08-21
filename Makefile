@@ -33,26 +33,29 @@ build: ## Builds the Docker images
 	docker build -t ${USER}/vm370:${IMAGE_TAG}-arm64 --platform=linux/arm64 .
 	docker build -t ${USER}/vm370:${IMAGE_TAG}-armv6 --platform=linux/arm/v6 .
 	docker build -t ${USER}/vm370:${IMAGE_TAG}-armv7 --platform=linux/arm/v7 .
-	docker build -t ${USER}/vm370:${IMAGE_TAG}-s390x --platform=linux/s390x .
+	docker build -t ${USER}/vm370:${IMAGE_TAG}-i386 --platform=linux/i386 .
+	docker build -t ${USER}/vm370:${IMAGE_TAG}-mips64le --platform=linux/mips64le .
 	docker build -t ${USER}/vm370:${IMAGE_TAG}-ppc64le --platform=linux/ppc64le .
-
-start: build ## Builds and starts the local arch Docker image
-	docker start -d -p 3270:3270 vm370
+	docker build -t ${USER}/vm370:${IMAGE_TAG}-s390x --platform=linux/s390x .
 
 upload_images: ## Uploads the docker images
 	docker image push ${USER}/vm370:${IMAGE_TAG}-amd64
 	docker image push ${USER}/vm370:${IMAGE_TAG}-arm64
 	docker image push ${USER}/vm370:${IMAGE_TAG}-armv6
 	docker image push ${USER}/vm370:${IMAGE_TAG}-armv7
-	docker image push ${USER}/vm370:${IMAGE_TAG}-s390x
+	docker image push ${USER}/vm370:${IMAGE_TAG}-i386
+	docker image push ${USER}/vm370:${IMAGE_TAG}-mips64le
 	docker image push ${USER}/vm370:${IMAGE_TAG}-ppc64le
+	docker image push ${USER}/vm370:${IMAGE_TAG}-s390x
 
 upload: upload_images ## Uploads the manifest
-	docker manifest create ${USER}/vm370:latest \
+	docker manifest create ${USER}/vm370:${IMAGE_TAG} \
 		--amend ${USER}/vm370:${IMAGE_TAG}-amd64 \
-		--amend ${USER}/vm370:${IMAGE_TAG}-amd64 \
+		--amend ${USER}/vm370:${IMAGE_TAG}-arm64 \
 		--amend ${USER}/vm370:${IMAGE_TAG}-armv6 \
 		--amend ${USER}/vm370:${IMAGE_TAG}-armv7 \
-		--amend ${USER}/vm370:${IMAGE_TAG}-s390x \
-		--amend ${USER}/vm370:${IMAGE_TAG}-ppc64le
-	docker manifest push ${USER}/vm370:latest
+		--amend ${USER}/vm370:${IMAGE_TAG}-i386 \
+		--amend ${USER}/vm370:${IMAGE_TAG}-mips64le \
+		--amend ${USER}/vm370:${IMAGE_TAG}-ppc64le \
+		--amend ${USER}/vm370:${IMAGE_TAG}-s390x 
+	docker manifest push ${USER}/vm370:${IMAGE_TAG}
