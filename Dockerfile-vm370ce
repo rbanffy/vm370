@@ -14,11 +14,19 @@ RUN DEBIAN_FRONTEND=noninteractive \
         apt install -y --no-install-recommends hercules wget unzip && \
         cd /home/$USERNAME && \
         wget http://www.vm370.org/sites/default/files/2022-07/VM370CE.V1.R1.2.zip && \
-        unzip VM370CE.V1.R1.2.zip  && \
+        wget http://dosvs.31bits.net/DOSVS_5Pack_V1.0-full.zip && \
+        unzip VM370CE.V1.R1.2.zip && \
         mv VM370CE.V1.R1.2/* . && \
+        unzip DOSVS_5Pack_V1.0-full.zip -d disks && \
+        # Enable DOS/VS devices.
+        sed -i 's/#0361/0361/' vm370ce.conf && \
+        sed -i 's/#0362/0362/' vm370ce.conf && \
+        sed -i 's/#0363/0363/' vm370ce.conf && \
+        sed -i 's/#0364/0364/' vm370ce.conf && \
         # Remove unwanted files.
         apt purge -y wget unzip && \
-        rm -rf /var/lib/apt/lists/* VM370CE.V1.R1.2.zip WC3270 && \
+        rm -rf /var/lib/apt/lists/* && \
+        rm -rf VM370CE.V1.R1.2.zip WC3270 VM370CE.V1.R1.2 DOSVS_5Pack_V1.0-full.zip && \
         # Enable web UI with the MAINT credentials
         sed -i 's/#HTTPPORT       8081/HTTPPORT    8081    AUTH MAINT CPCMS/' vm370ce.conf && \
         # Log off the OPERATOR user from the Hercules console
