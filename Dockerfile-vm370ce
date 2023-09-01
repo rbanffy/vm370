@@ -1,0 +1,34 @@
+FROM debian:testing-slim
+
+LABEL maintainer="Ricardo Bánffy <rbanffy@gmail.com>"
+
+ARG USERNAME=hercules
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+RUN DEBIAN_FRONTEND=noninteractive \
+        groupadd --gid $USER_GID $USERNAME && \
+        useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
+        apt update && \
+        apt upgrade -y && \
+        apt install -y --no-install-recommends hercules wget unzip && \
+        cd /home/$USERNAME && \
+        wget http://www.vm370.org/sites/default/files/2022-07/VM370CE.V1.R1.2.zip && \
+        unzip VM370CE.V1.R1.2.zip  && \
+        mv VM370CE.V1.R1.2/* . && \
+        # Remove unwanted files.
+        apt purge -y wget unzip && \
+        rm -rf /var/lib/apt/lists/* VM370CE.V1.R1.2.zip WC3270 && \
+        # Enable web UI with the MAINT credentials
+        sed -i 's/#HTTPPORT       8081/HTTPPORT    8081    AUTH MAINT CPCMS/' vm370ce.conf && \
+        # Log off the OPERATOR user from the Hercules console
+        echo '/LOGOFF' >> hercules.rc && \
+        chown -R $USERNAME:$USERNAME /home/$USERNAME
+
+USER $USERNAME
+WORKDIR /home/$USERNAME
+
+EXPOSE 3270/TCP
+EXPOSE 8081/TCP
+
+CMD ["hercules", "-f", "vm370ce.conf"]
