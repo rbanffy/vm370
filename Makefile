@@ -3,7 +3,7 @@
 
 SHELL = /bin/sh
 
-OPERATING_SYSTEM = vm370
+OPERATING_SYSTEM ?= vm370
 
 define PRINT_HELP_PYSCRIPT
 import re, sys
