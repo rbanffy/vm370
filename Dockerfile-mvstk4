@@ -1,0 +1,33 @@
+FROM debian:testing-slim
+
+LABEL maintainer="Ricardo Bánffy <rbanffy@gmail.com>"
+
+ARG USERNAME=hercules
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+RUN DEBIAN_FRONTEND=noninteractive \
+        groupadd --gid $USER_GID $USERNAME && \
+        useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
+        apt update && \
+        apt upgrade -y && \
+        apt install -y --no-install-recommends hercules wget unzip && \
+        cd /home/$USERNAME && \
+        wget --no-check-certificate https://wotho.ethz.ch/tk4-/tk4-_v1.00_current.zip && \
+        wget --no-check-certificate https://wotho.ethz.ch/tk4-/tk4-cbt.zip && \
+        wget --no-check-certificate https://wotho.ethz.ch/tk4-/tk4-source.zip && \
+        unzip tk4-_v1.00_current.zip && \
+        unzip -o tk4-cbt.zip && \
+        unzip -o tk4-source.zip && \
+        # Remove unwanted files.
+        apt purge -y wget unzip && \
+        rm -rf /var/lib/apt/lists/* *.zip && \
+        chown -R $USERNAME:$USERNAME /home/$USERNAME
+
+USER $USERNAME
+WORKDIR /home/$USERNAME
+
+EXPOSE 3270/TCP
+EXPOSE 8081/TCP
+
+CMD [$WORKDIR, "start_herc"]
