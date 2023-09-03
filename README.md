@@ -27,7 +27,7 @@ for the MAINT user (as published in the Sixpack documentation).
 
 ## Building an image with other OSs
 
-By default we'll build based on Dockerfile-vm370. To select other Dockerfiles, 
+By default we'll build based on Dockerfile-vm370. To select other Dockerfiles,
 set the variable OPERATING_SYSTEM.
 
 ```shell
@@ -40,6 +40,12 @@ To run the VM370 Six Pack image without building it locally, use:
 
 ```shell
 docker run -it -p 3270:3270 -p 8081:8081 rbanffy/vm370
+```
+
+MVS Tk4- uses port 8038 for the web console:
+
+```shell
+docker run -it -p 3270:3270 -p 8038:8038 rbanffy/mvstk4
 ```
 
 ## Deploying it to a Docker Swarm
@@ -56,6 +62,9 @@ get you to the VM370 welcome screen.
 
 ### A warning
 
-The web-based Hercules console is not working properly at the moment. Also
-data is not persisted when the workload is moved to a new node. Use it at
-your own peril (and, if you know how, help improving it).
+The web-based Hercules console is not working properly for the VM370 images at
+the moment, but work correctly with MVS 3.8 Tk4- on port 8038.
+
+A more serious issue is that data is not persisted beyond the life of the
+container, or when the workload is moved to a new node. Use it at your own
+peril (and, if you know how, help improving it).

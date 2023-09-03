@@ -1,5 +1,6 @@
 ## current
 
+- Added Dockerfiles for VM370 Community Edition and MVS Tk4-
 - Improved README
 - LOGOFF the operator so it can be used from a 3270
 - Enable the web interface
