@@ -25,7 +25,7 @@ build: ## Builds the Docker images
 	docker build -t ${USER}/${OPERATING_SYSTEM}:latest-arm64 --platform=linux/arm64 --file ./Dockerfile-${OPERATING_SYSTEM} .
 	docker build -t ${USER}/${OPERATING_SYSTEM}:latest-armv6 --platform=linux/arm/v6 --file ./Dockerfile-${OPERATING_SYSTEM} .
 	docker build -t ${USER}/${OPERATING_SYSTEM}:latest-armv7 --platform=linux/arm/v7 --file ./Dockerfile-${OPERATING_SYSTEM} .
-	docker build -t ${USER}/${OPERATING_SYSTEM}:latest-s390x --platform=linux/s390x --file ./Dockerfile-${OPERATING_SYSTEM} . 
+	docker build -t ${USER}/${OPERATING_SYSTEM}:latest-s390x --platform=linux/s390x --file ./Dockerfile-${OPERATING_SYSTEM} .
 	docker build -t ${USER}/${OPERATING_SYSTEM}:latest-ppc64le --platform=linux/ppc64le --file ./Dockerfile-${OPERATING_SYSTEM} .
 
 start: build ## Builds and starts the local arch Docker image
