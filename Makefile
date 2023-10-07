@@ -37,9 +37,6 @@ build: ## Builds the Docker images
 	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-s390x --platform=linux/s390x --file ./Dockerfile-${OPERATING_SYSTEM} .
 	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-ppc64le --platform=linux/ppc64le --file ./Dockerfile-${OPERATING_SYSTEM} .
 
-start: build ## Builds and starts the local arch Docker image
-	docker start -d -p 3270:3270 ${OPERATING_SYSTEM}
-
 upload_images: ## Uploads the docker images
 	docker image push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64
 	docker image push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-arm64
