@@ -4,6 +4,15 @@
 SHELL = /bin/sh
 
 OPERATING_SYSTEM ?= vm370
+BRANCH = $(shell git branch --show-current)
+
+ifeq ($(BRANCH),main)
+	IMAGE_TAG = stable
+else ifeq ($(BRANCH),develop)
+	IMAGE_TAG = latest
+else
+	IMAGE_TAG = $(BRANCH)
+endif
 
 define PRINT_HELP_PYSCRIPT
 import re, sys
@@ -21,30 +30,30 @@ help: ## Displays this message.
 	@python3 -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
 build: ## Builds the Docker images
-	docker build -t ${USER}/${OPERATING_SYSTEM}:latest-amd64 --platform=linux/amd64 --file Dockerfile-${OPERATING_SYSTEM} .
-	docker build -t ${USER}/${OPERATING_SYSTEM}:latest-arm64 --platform=linux/arm64 --file ./Dockerfile-${OPERATING_SYSTEM} .
-	docker build -t ${USER}/${OPERATING_SYSTEM}:latest-armv6 --platform=linux/arm/v6 --file ./Dockerfile-${OPERATING_SYSTEM} .
-	docker build -t ${USER}/${OPERATING_SYSTEM}:latest-armv7 --platform=linux/arm/v7 --file ./Dockerfile-${OPERATING_SYSTEM} .
-	docker build -t ${USER}/${OPERATING_SYSTEM}:latest-s390x --platform=linux/s390x --file ./Dockerfile-${OPERATING_SYSTEM} .
-	docker build -t ${USER}/${OPERATING_SYSTEM}:latest-ppc64le --platform=linux/ppc64le --file ./Dockerfile-${OPERATING_SYSTEM} .
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64 --platform=linux/amd64 --file Dockerfile-${OPERATING_SYSTEM} .
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-arm64 --platform=linux/arm64 --file ./Dockerfile-${OPERATING_SYSTEM} .
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv6 --platform=linux/arm/v6 --file ./Dockerfile-${OPERATING_SYSTEM} .
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv7 --platform=linux/arm/v7 --file ./Dockerfile-${OPERATING_SYSTEM} .
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-s390x --platform=linux/s390x --file ./Dockerfile-${OPERATING_SYSTEM} .
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-ppc64le --platform=linux/ppc64le --file ./Dockerfile-${OPERATING_SYSTEM} .
 
 start: build ## Builds and starts the local arch Docker image
-	docker start -d -p 3270:3270 vm370
+	docker start -d -p 3270:3270 ${OPERATING_SYSTEM}
 
 upload_images: ## Uploads the docker images
-	docker image push ${USER}/${OPERATING_SYSTEM}:latest-amd64
-	docker image push ${USER}/${OPERATING_SYSTEM}:latest-arm64
-	docker image push ${USER}/${OPERATING_SYSTEM}:latest-armv6
-	docker image push ${USER}/${OPERATING_SYSTEM}:latest-armv7
-	docker image push ${USER}/${OPERATING_SYSTEM}:latest-s390x
-	docker image push ${USER}/${OPERATING_SYSTEM}:latest-ppc64le
+	docker image push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64
+	docker image push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-arm64
+	docker image push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv6
+	docker image push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv7
+	docker image push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-s390x
+	docker image push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-ppc64le
 
 upload: upload_images ## Uploads the manifest
 	docker manifest create ${USER}/${OPERATING_SYSTEM}:latest \
-		--amend ${USER}/${OPERATING_SYSTEM}:latest-amd64 \
-		--amend ${USER}/${OPERATING_SYSTEM}:latest-amd64 \
-		--amend ${USER}/${OPERATING_SYSTEM}:latest-armv6 \
-		--amend ${USER}/${OPERATING_SYSTEM}:latest-armv7 \
-		--amend ${USER}/${OPERATING_SYSTEM}:latest-s390x \
-		--amend ${USER}/${OPERATING_SYSTEM}:latest-ppc64le
+		--amend ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64 \
+		--amend ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64 \
+		--amend ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv6 \
+		--amend ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv7 \
+		--amend ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-s390x \
+		--amend ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-ppc64le
 	docker manifest push ${USER}/${OPERATING_SYSTEM}:latest
