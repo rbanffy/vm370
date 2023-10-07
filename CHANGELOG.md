@@ -1,4 +1,4 @@
-## current
+## 1.4
 
 - Added Dockerfiles for VM370 Community Edition and MVS Tk4-
 - Improved README
