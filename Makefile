@@ -46,11 +46,11 @@ upload_images: ## Uploads the docker images
 	docker image push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-ppc64le
 
 upload: upload_images ## Uploads the manifest
-	docker manifest create ${USER}/${OPERATING_SYSTEM}:latest \
+	docker manifest create ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG} \
 		--amend ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64 \
 		--amend ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64 \
 		--amend ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv6 \
 		--amend ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv7 \
 		--amend ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-s390x \
 		--amend ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-ppc64le
-	docker manifest push ${USER}/${OPERATING_SYSTEM}:latest
+	docker manifest push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}
