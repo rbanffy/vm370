@@ -2,6 +2,7 @@
 .DEFAULT_GOAL := help
 
 SHELL = /bin/sh
+BUILD_DIR = build
 
 OPERATING_SYSTEM ?= vm370
 BRANCH = $(shell git branch --show-current)
@@ -24,6 +25,21 @@ for line in sys.stdin:
 		print("%-20s %s" % (target, help))
 endef
 export PRINT_HELP_PYSCRIPT
+
+ifeq ($(OPERATING_SYSTEM),mvstk5)
+
+distribution: ## Downloads local distribution files
+	@echo "Dowloading distribution files"
+	wget --no-check-certificate -c --directory-prefix ${BUILD_DIR} https://www.prince-webdesign.nl/images/downloads/mvs-tk5.zip
+	wget --no-check-certificate -c --directory-prefix ${BUILD_DIR} https://www.prince-webdesign.nl/images/downloads/srccbt_catlg.txt
+	wget --no-check-certificate -c --directory-prefix ${BUILD_DIR} https://www.prince-webdesign.nl/images/downloads/srccbt.zip
+	@echo "Decompressing distribution files"
+	unzip -o ${BUILD_DIR}/mvs-tk5.zip -d ${BUILD_DIR}
+	unzip -o ${BUILD_DIR}/srccbt.zip -d ${BUILD_DIR}/mvs-tk5
+else
+distribution:
+	@echo "Distribution will be downloaded by docker."
+endif
 
 help: ## Displays this message.
 	@echo "Please use \`make <target>' where <target> is one of:"
