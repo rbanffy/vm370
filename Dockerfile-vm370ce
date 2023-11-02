@@ -13,6 +13,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
         apt upgrade -y && \
         apt install -y --no-install-recommends hercules wget unzip && \
         cd /home/$USERNAME && \
+        # Dowload the emultor configuration and disk/tape images
         wget http://www.vm370.org/sites/default/files/2022-07/VM370CE.V1.R1.2.zip && \
         wget http://dosvs.31bits.net/DOSVS_5Pack_V1.0-full.zip && \
         unzip VM370CE.V1.R1.2.zip && \

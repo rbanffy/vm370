@@ -13,6 +13,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
         apt upgrade -y && \
         apt install -y --no-install-recommends hercules wget unzip && \
         cd /home/$USERNAME && \
+        # Dowload the emultor configuration and disk/tape images
         wget http://www.smrcc.org.uk/members/g4ugm/vm-370/vm370sixpack-1_3.zip && \
         unzip vm370sixpack-1_3.zip && \
         # Remove unwanted files.
