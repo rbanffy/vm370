@@ -53,7 +53,7 @@ build: distribution ## Builds the Docker images
 	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-s390x --platform=linux/s390x --file ./Dockerfile-${OPERATING_SYSTEM} .
 	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-ppc64le --platform=linux/ppc64le --file ./Dockerfile-${OPERATING_SYSTEM} .
 
-upload_images: ## Uploads the docker images
+upload_images: ## Uploads the local docker images
 	docker image push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64
 	docker image push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-arm64
 	docker image push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv6
