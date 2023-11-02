@@ -45,7 +45,7 @@ help: ## Displays this message.
 	@echo "Please use \`make <target>' where <target> is one of:"
 	@python3 -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-build: ## Builds the Docker images
+build: distribution ## Builds the Docker images
 	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64 --platform=linux/amd64 --file Dockerfile-${OPERATING_SYSTEM} .
 	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-arm64 --platform=linux/arm64 --file ./Dockerfile-${OPERATING_SYSTEM} .
 	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv6 --platform=linux/arm/v6 --file ./Dockerfile-${OPERATING_SYSTEM} .
