@@ -1,0 +1,33 @@
+FROM debian:testing-slim
+
+LABEL maintainer="Ricardo Bánffy <rbanffy@gmail.com>"
+
+ARG USERNAME=hercules
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+COPY build/mvs-tk5 /tmp/mvs-tk5
+
+RUN DEBIAN_FRONTEND=noninteractive \
+        groupadd --gid $USER_GID $USERNAME && \
+        useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
+        apt update && \
+        apt upgrade -y && \
+        apt install -y --no-install-recommends hercules wget unzip && \
+        cd /home/$USERNAME && \
+        # Copy the emultor configuration and disk/tape images.
+        mv /tmp/mvs-tk5 . && \
+        cd mvs-tk5 && \
+        chmod +x mvs mvs_ipl mvs_osx start_herc && \
+        # Remove unwanted files.
+        apt purge -y wget unzip && \
+        rm -rf /var/lib/apt/lists/* /*.zip && \
+        chown -R $USERNAME:$USERNAME /home/$USERNAME
+
+USER $USERNAME
+WORKDIR /home/$USERNAME/mvs-tk5
+
+EXPOSE 3270/TCP
+EXPOSE 8038/TCP
+
+CMD ["./mvs"]
