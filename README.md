@@ -68,3 +68,30 @@ the moment, but work correctly with MVS 3.8 Tk4- on port 8038.
 A more serious issue is that data is not persisted beyond the life of the
 container, or when the workload is moved to a new node. Use it at your own
 peril (and, if you know how, help improving it).
+
+## About the environments
+
+### VM370 SixPack and VM370ce
+
+These are VM/370 systems with numerous improvements, fixes, and extras. VM370ce is newer and has more functionality.
+
+Both come preconfigured with two users:
+
+|Userid|Description|Password|
+|------|-----------|--------|
+|CMSUSER|Normal user|CMSUSER|
+|MAINT|Maintenance user|CPCMS|
+
+### MVSTk4
+
+This is an MVS 3.8j (the last version of MVS that can be legally deployed without a license - and an actual mainframe), with numerous improvements, fixes, and extras.
+
+It comes with 5 preconfigured users:
+
+|Userid|Description|Password|
+|------|-----------|--------|
+|HERC01|Fully Authorized|CUL8TR|
+|HERC02|Fully Authorized|CUL8TR|
+|HERC03|Standard user|PASS4U|
+|HERC04|Standard user|PASS4U|
+|IBMUSER|Emergency user|IBMPASS|
