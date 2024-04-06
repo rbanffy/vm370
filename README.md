@@ -75,13 +75,15 @@ peril (and, if you know how, help improving it).
 
 These are VM/370 systems with numerous improvements, fixes, and extras. VM370ce is newer and has more functionality.
 
-Both come preconfigured with three users:
+Both come preconfigured with multiple users:
 
 |Userid|Description|Password|
 |------|-----------|--------|
 |CMSUSER|Normal user|CMSUSER|
 |MAINT|Maintenance user|CPCMS|
 |OPERATOR|Operator user|OPERATOR|
+
+The user MAINT can see the other users in the `USERS DIRECT` file.
 
 ### MVSTk4
 
