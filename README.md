@@ -75,7 +75,7 @@ peril (and, if you know how, help improving it).
 
 These are VM/370 systems with numerous improvements, fixes, and extras. VM370ce is newer and has more functionality.
 
-Both come preconfigured with two users:
+Both come preconfigured with three users:
 
 |Userid|Description|Password|
 |------|-----------|--------|
