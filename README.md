@@ -81,6 +81,7 @@ Both come preconfigured with two users:
 |------|-----------|--------|
 |CMSUSER|Normal user|CMSUSER|
 |MAINT|Maintenance user|CPCMS|
+|OPERATOR|Operator user|OPERATOR|
 
 ### MVSTk4
 
