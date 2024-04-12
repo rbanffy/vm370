@@ -14,7 +14,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
         apt install -y --no-install-recommends hercules wget unzip && \
         cd /home/$USERNAME && \
         # Dowload the emultor configuration and disk/tape images
-        wget http://www.smrcc.org.uk/members/g4ugm/vm-370/vm370sixpack-1_3.zip && \
+        wget -q http://www.smrcc.org.uk/members/g4ugm/vm-370/vm370sixpack-1_3.zip && \
         unzip vm370sixpack-1_3.zip && \
         # Enable CMS/DOS disks.
         sed -i 's/#06a0/06a0/' sixpack.conf && \
