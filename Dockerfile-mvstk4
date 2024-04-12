@@ -11,7 +11,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
         useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
         apt update && \
         apt upgrade -y && \
-        apt install -y --no-install-recommends hercules wget unzip && \
+        apt install -y --no-install-recommends hercules wget unzip ca-certificates && \
         cd /home/$USERNAME && \
         # Dowload the emultor configuration and disk/tape images.
         wget https://mvstk4.s3.amazonaws.com/tk4-_v1.00_current.zip && \
@@ -21,7 +21,8 @@ RUN DEBIAN_FRONTEND=noninteractive \
         unzip -o tk4-cbt.zip && \
         unzip -o tk4-source.zip && \
         # Remove unwanted files.
-        apt purge -y wget unzip && \
+        apt purge -y wget unzip ca-certificates && \
+        apt -y autoremove && \
         rm -rf /var/lib/apt/lists/* *.zip && \
         chown -R $USERNAME:$USERNAME /home/$USERNAME
 
