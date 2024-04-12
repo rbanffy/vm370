@@ -89,7 +89,7 @@ The user MAINT can see the other users in the `USERS DIRECT` file.
 
 This is an MVS 3.8j (the last version of MVS that can be legally deployed without a license - and an actual mainframe), with numerous improvements, fixes, and extras.
 
-It comes with 5 preconfigured users:
+It comes with some preconfigured users:
 
 |Userid|Description|Password|
 |------|-----------|--------|
