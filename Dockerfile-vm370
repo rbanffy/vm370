@@ -18,6 +18,10 @@ RUN DEBIAN_FRONTEND=noninteractive \
         unzip vm370sixpack-1_3.zip && \
         # Remove unwanted files.
         apt purge -y wget unzip && \
+        apt -y autoremove && \
+        # Remove the APT package information.
+        rm -rf /var/lib/apt/lists/* && \
+        # Remove the files we downloaded.
         rm -rf /var/lib/apt/lists/* vm370sixpack-1_3.zip WC3270 && \
         # Enable CMS/DOS disks.
         sed -i 's/#06a0/06a0/' sixpack.conf && \
