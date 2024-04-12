@@ -27,7 +27,6 @@ endef
 export PRINT_HELP_PYSCRIPT
 
 ifeq ($(OPERATING_SYSTEM),mvstk5)
-
 distribution: ## Downloads local distribution files
 	@echo "Dowloading distribution files"
 	wget --no-check-certificate -c --directory-prefix ${BUILD_DIR} https://www.prince-webdesign.nl/images/downloads/mvs-tk5.zip
