@@ -24,6 +24,10 @@ RUN DEBIAN_FRONTEND=noninteractive \
         sed -i 's/#0362/0362/' vm370ce.conf && \
         sed -i 's/#0363/0363/' vm370ce.conf && \
         sed -i 's/#0364/0364/' vm370ce.conf && \
+        # Enable web UI with the MAINT credentials
+        sed -i 's/#HTTPPORT       8081/HTTPPORT    8081    AUTH MAINT CPCMS/' vm370ce.conf && \
+        # Log off the OPERATOR user from the Hercules console
+        echo '/LOGOFF' >> hercules.rc && \
         # Remove unwanted files.
         apt purge -y wget unzip && \
         apt -y autoremove && \
@@ -31,10 +35,6 @@ RUN DEBIAN_FRONTEND=noninteractive \
         rm -rf /var/lib/apt/lists/* && \
         # Remove the files we downloaded.
         rm -rf VM370CE.V1.R1.2.zip WC3270 VM370CE.V1.R1.2 DOSVS_5Pack_V1.0-full.zip && \
-        # Enable web UI with the MAINT credentials
-        sed -i 's/#HTTPPORT       8081/HTTPPORT    8081    AUTH MAINT CPCMS/' vm370ce.conf && \
-        # Log off the OPERATOR user from the Hercules console
-        echo '/LOGOFF' >> hercules.rc && \
         chown -R $USERNAME:$USERNAME /home/$USERNAME
 
 USER $USERNAME
