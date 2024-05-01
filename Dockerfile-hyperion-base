@@ -1,0 +1,98 @@
+FROM debian:testing-slim
+
+LABEL maintainer="Ricardo Bánffy <rbanffy@gmail.com>"
+
+ARG USERNAME=hercules
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+RUN DEBIAN_FRONTEND=noninteractive \
+    groupadd --gid $USER_GID $USERNAME && \
+    useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
+    apt update && \
+    apt upgrade -y && \
+    apt -y install git build-essential wget unzip ca-certificates time cmake flex gawk m4 autoconf automake libtool-bin libltdl-dev libbz2-dev zlib1g-dev libcap2-bin libregina3-dev && \
+
+    cd /home/$USERNAME && \
+
+    # Get the main repo
+    git clone https://github.com/SDL-Hercules-390/hyperion.git && \
+
+    # Get the external modules
+    git clone https://github.com/SDL-Hercules-390/crypto.git && \
+    git clone https://github.com/SDL-Hercules-390/decNumber.git && \
+    git clone https://github.com/SDL-Hercules-390/SoftFloat.git && \
+    git clone https://github.com/SDL-Hercules-390/telnet.git && \
+
+    # Build the external crypto module
+    mkdir /home/$USERNAME/crypto32.Release && \
+    mkdir /home/$USERNAME/crypto64.Release
+
+RUN export ARCH=$( arch ) && \
+
+    cd /home/$USERNAME/crypto32.Release && \
+    cmake ../crypto && \
+    make && \
+    cd /home/$USERNAME/crypto64.Release && \
+    cmake ../crypto && \
+    make && \
+    mkdir /home/$USERNAME/hyperion/crypto/lib/${ARCH} && \
+    cp -v libcrypto*.a /home/$USERNAME/hyperion/crypto/lib/${ARCH}/ && \
+
+    # Build the external decNumber module
+    mkdir /home/$USERNAME/decNumber32.Release && \
+    mkdir /home/$USERNAME/decNumber64.Release && \
+
+    cd /home/$USERNAME/decNumber32.Release && \
+    cmake ../decNumber && \
+    make && \
+    cd /home/$USERNAME/decNumber64.Release && \
+    cmake ../decNumber && \
+    make && \
+    mkdir /home/$USERNAME/hyperion/decNumber/lib/${ARCH} && \
+    cp -v libdecNumber*.a /home/$USERNAME/hyperion/decNumber/lib/${ARCH}/ && \
+
+    # Build the external SoftFloat module
+    mkdir /home/$USERNAME/SoftFloat32.Release && \
+    mkdir /home/$USERNAME/SoftFloat64.Release && \
+
+    cd /home/$USERNAME/SoftFloat32.Release && \
+    cmake ../SoftFloat && \
+    make && \
+    cd /home/$USERNAME/SoftFloat64.Release && \
+    cmake ../SoftFloat && \
+    make && \
+    mkdir /home/$USERNAME/hyperion/SoftFloat/lib/${ARCH} && \
+    cp -v libSoftFloat*.a /home/$USERNAME/hyperion/SoftFloat/lib/${ARCH}/ && \
+
+    # Build the external telnet module build
+    mkdir /home/$USERNAME/telnet32.Release && \
+    mkdir /home/$USERNAME/telnet64.Release && \
+
+    cd /home/$USERNAME/telnet32.Release && \
+    cmake ../telnet && \
+    make && \
+    cd /home/$USERNAME/telnet64.Release && \
+    cmake ../telnet && \
+    make && \
+    mkdir /home/$USERNAME/hyperion/telnet/lib/${ARCH} && \
+    cp -v libtelnet*.a /home/$USERNAME/hyperion/telnet/lib/${ARCH}/ 
+
+    # Build Hercules
+RUN cd /home/$USERNAME/hyperion && \
+    ./configure && \
+    make install && \
+
+    # Remove unwanted files.
+    apt purge -y git build-essential wget unzip ca-certificates time cmake flex gawk m4 autoconf automake libtool-bin libltdl-dev libbz2-dev zlib1g-dev libcap2-bin libregina3-dev && \
+    apt -y autoremove && \
+    rm -rf /var/lib/apt/lists/* *.zip && \
+    chown -R $USERNAME:$USERNAME /home/$USERNAME
+
+USER $USERNAME
+WORKDIR /home/$USERNAME
+
+EXPOSE 3270/TCP
+EXPOSE 8038/TCP
+
+CMD ["hercules"]
