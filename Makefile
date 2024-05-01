@@ -45,7 +45,7 @@ help: ## Displays this message.
 	@python3 -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
 build: distribution ## Builds the Docker images
-	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64 --platform=linux/amd64 --file Dockerfile-${OPERATING_SYSTEM} .
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64 --platform=linux/amd64 --file ./Dockerfile-${OPERATING_SYSTEM} .
 	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-arm64 --platform=linux/arm64 --file ./Dockerfile-${OPERATING_SYSTEM} .
 	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv6 --platform=linux/arm/v6 --file ./Dockerfile-${OPERATING_SYSTEM} .
 	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv7 --platform=linux/arm/v7 --file ./Dockerfile-${OPERATING_SYSTEM} .
