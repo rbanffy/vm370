@@ -4,6 +4,8 @@
 SHELL = /bin/sh
 BUILD_DIR = build
 
+ARCHITECTURES = amd64 arm64 arm/v6 arm/v7 s390x ppc64le
+
 OPERATING_SYSTEM ?= vm370
 BRANCH = $(shell git branch --show-current)
 
@@ -41,8 +43,15 @@ distribution:
 endif
 
 help: ## Displays this message.
-	@echo "Please use \`make <target>' where <target> is one of:"
+	@echo "Please use \`make <target>\` where <target> is one of:"
 	@python3 -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+
+${USER}-base-${IMAGE_TAG}-amd64.tar: Dockerfile-hyperion-base
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64 --platform=linux/amd64 --file Dockerfile-hyperion-base .
+
+${USER}-${OPERATING_SYSTEM}-${IMAGE_TAG}-amd64.tar: Dockerfile-${OPERATING_SYSTEM}
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64 --platform=linux/amd64 --file Dockerfile-${OPERATING_SYSTEM} .
+	docker save -o ${BUILD_DIR}/${USER}-${OPERATING_SYSTEM}-${IMAGE_TAG}-amd64.tar ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64
 
 build: distribution ## Builds the Docker images
 	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64 --platform=linux/amd64 --file ./Dockerfile-${OPERATING_SYSTEM} .
