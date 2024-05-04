@@ -13,7 +13,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
     apt upgrade -y && \
     apt -y install git build-essential wget unzip ca-certificates time cmake flex gawk m4 autoconf automake libtool-bin libltdl-dev libbz2-dev zlib1g-dev libcap2-bin libregina3-dev && \
 
-    cd /home/$USERNAME && \
+    cd /home/$USERNAME/ && \
 
     # Get the main repo
     git clone https://github.com/SDL-Hercules-390/hyperion.git && \
@@ -29,7 +29,16 @@ RUN DEBIAN_FRONTEND=noninteractive \
     mkdir /home/$USERNAME/crypto64.Release
 
 RUN export ARCH=$( arch ) && \
-
+    if [[ "$ARCH" == "x86_64" ]]; then \
+        export ARCH="amd64"; \
+        export WORD_LENGTH=64; \
+    elif [[ "$ARCH" == "armv7l" ]]; then \
+        export ARCH="arm/v7"; \
+        export WORD_LENGTH=64; \
+    else \
+        echo "Couldn't translate architecture"; \
+        exit 1; \
+    fi && \
     cd /home/$USERNAME/crypto32.Release && \
     cmake ../crypto && \
     make && \
@@ -76,7 +85,7 @@ RUN export ARCH=$( arch ) && \
     cmake ../telnet && \
     make && \
     mkdir /home/$USERNAME/hyperion/telnet/lib/${ARCH} && \
-    cp -v libtelnet*.a /home/$USERNAME/hyperion/telnet/lib/${ARCH}/ 
+    cp -v libtelnet*.a /home/$USERNAME/hyperion/telnet/lib/${ARCH}/
 
     # Build Hercules
 RUN cd /home/$USERNAME/hyperion && \
