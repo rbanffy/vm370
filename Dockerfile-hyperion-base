@@ -11,7 +11,26 @@ RUN DEBIAN_FRONTEND=noninteractive \
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
     apt update && \
     apt upgrade -y && \
-    apt -y install git build-essential wget unzip ca-certificates time cmake flex gawk m4 autoconf automake libtool-bin libltdl-dev libbz2-dev zlib1g-dev libcap2-bin libregina3-dev && \
+    apt -y install \
+    autoconf \
+    automake \
+    build-essential \
+    ca-certificates \
+    cmake \
+    flex \
+    gawk \
+    git \
+    libbz2-dev \
+    libcap2-bin \
+    libltdl-dev \
+    libregina3-dev \
+    libtool-bin \
+    m4 \
+    sysvbanner \
+    time \
+    unzip \
+    wget \
+    zlib1g-dev && \
 
     cd /home/$USERNAME/ && \
 
@@ -22,68 +41,83 @@ RUN DEBIAN_FRONTEND=noninteractive \
     git clone https://github.com/SDL-Hercules-390/crypto.git && \
     git clone https://github.com/SDL-Hercules-390/decNumber.git && \
     git clone https://github.com/SDL-Hercules-390/SoftFloat.git && \
-    git clone https://github.com/SDL-Hercules-390/telnet.git && \
+    git clone https://github.com/SDL-Hercules-390/telnet.git
+
+# Detect architecture and word size
+RUN export ARCH=$( arch ) && \
+    sysvbanner "$ARCH" && \
+    if [ "$ARCH"="x86_64" ]; then \
+        export ARCH="amd64"; \
+        export WORD_LENGTH=64; \
+    elif [ "$ARCH"="aarch64" ]; then \
+        export ARCH="aarch64"; \
+        export WORD_LENGTH=64; \
+    elif [ "$ARCH"="ppc64le" ]; then \
+        export ARCH="ppc"; \
+        export WORD_LENGTH=64; \
+    elif [ "$ARCH"="ppc64le" ]; then \
+        export ARCH="ppc"; \
+        export WORD_LENGTH=64; \
+    else \
+        echo "Couldn't translate architecture $ARCH"; \
+        exit 1; \
+    fi && \
 
     # Build the external crypto module
     mkdir /home/$USERNAME/crypto32.Release && \
-    mkdir /home/$USERNAME/crypto64.Release
-
-RUN export ARCH=$( arch ) && \
-    if [[ "$ARCH" == "x86_64" ]]; then \
-        export ARCH="amd64"; \
-        export WORD_LENGTH=64; \
-    elif [[ "$ARCH" == "armv7l" ]]; then \
-        export ARCH="arm/v7"; \
-        export WORD_LENGTH=64; \
-    else \
-        echo "Couldn't translate architecture"; \
-        exit 1; \
-    fi && \
     cd /home/$USERNAME/crypto32.Release && \
     cmake ../crypto && \
     make && \
+
+    mkdir /home/$USERNAME/crypto64.Release && \
     cd /home/$USERNAME/crypto64.Release && \
     cmake ../crypto && \
     make && \
+
     mkdir /home/$USERNAME/hyperion/crypto/lib/${ARCH} && \
     cp -v libcrypto*.a /home/$USERNAME/hyperion/crypto/lib/${ARCH}/ && \
 
     # Build the external decNumber module
-    mkdir /home/$USERNAME/decNumber32.Release && \
-    mkdir /home/$USERNAME/decNumber64.Release && \
+    if [ "$WORD_LENGTH"="32" ]; then \
+        mkdir /home/$USERNAME/decNumber32.Release && \
+        cd /home/$USERNAME/decNumber32.Release && \
+        cmake ../decNumber && \
+        make; \
+    else \
+        mkdir /home/$USERNAME/decNumber64.Release && \
+        cd /home/$USERNAME/decNumber64.Release && \
+        cmake ../decNumber && \
+        make; \
+    fi && \
 
-    cd /home/$USERNAME/decNumber32.Release && \
-    cmake ../decNumber && \
-    make && \
-    cd /home/$USERNAME/decNumber64.Release && \
-    cmake ../decNumber && \
-    make && \
     mkdir /home/$USERNAME/hyperion/decNumber/lib/${ARCH} && \
     cp -v libdecNumber*.a /home/$USERNAME/hyperion/decNumber/lib/${ARCH}/ && \
 
     # Build the external SoftFloat module
     mkdir /home/$USERNAME/SoftFloat32.Release && \
-    mkdir /home/$USERNAME/SoftFloat64.Release && \
-
     cd /home/$USERNAME/SoftFloat32.Release && \
     cmake ../SoftFloat && \
     make && \
+
+    mkdir /home/$USERNAME/SoftFloat64.Release && \
     cd /home/$USERNAME/SoftFloat64.Release && \
     cmake ../SoftFloat && \
     make && \
+
     mkdir /home/$USERNAME/hyperion/SoftFloat/lib/${ARCH} && \
     cp -v libSoftFloat*.a /home/$USERNAME/hyperion/SoftFloat/lib/${ARCH}/ && \
 
     # Build the external telnet module build
     mkdir /home/$USERNAME/telnet32.Release && \
-    mkdir /home/$USERNAME/telnet64.Release && \
-
     cd /home/$USERNAME/telnet32.Release && \
     cmake ../telnet && \
     make && \
+
+    mkdir /home/$USERNAME/telnet64.Release && \
     cd /home/$USERNAME/telnet64.Release && \
     cmake ../telnet && \
     make && \
+
     mkdir /home/$USERNAME/hyperion/telnet/lib/${ARCH} && \
     cp -v libtelnet*.a /home/$USERNAME/hyperion/telnet/lib/${ARCH}/
 
@@ -93,7 +127,26 @@ RUN cd /home/$USERNAME/hyperion && \
     make install && \
 
     # Remove unwanted files.
-    apt purge -y git build-essential wget unzip ca-certificates time cmake flex gawk m4 autoconf automake libtool-bin libltdl-dev libbz2-dev zlib1g-dev libcap2-bin libregina3-dev && \
+    apt purge -y \
+    autoconf \
+    automake \
+    build-essential \
+    ca-certificates \
+    cmake \
+    flex \
+    gawk \
+    git \
+    libbz2-dev \
+    libcap2-bin \
+    libltdl-dev \
+    libregina3-dev \
+    libtool-bin \
+    m4 \
+    sysvbanner \
+    time \
+    unzip \
+    wget \
+    zlib1g-dev && \
     apt -y autoremove && \
     rm -rf /var/lib/apt/lists/* *.zip && \
     chown -R $USERNAME:$USERNAME /home/$USERNAME
