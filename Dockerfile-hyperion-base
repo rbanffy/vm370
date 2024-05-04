@@ -10,8 +10,9 @@ RUN DEBIAN_FRONTEND=noninteractive \
     groupadd --gid $USER_GID $USERNAME && \
     useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
     apt update && \
-    apt upgrade -y && \
-    apt -y install \
+    # apt upgrade -y && \
+    apt -y install --no-install-recommends \
+    apt-utils \
     autoconf \
     automake \
     build-essential \
@@ -30,12 +31,18 @@ RUN DEBIAN_FRONTEND=noninteractive \
     time \
     unzip \
     wget \
-    zlib1g-dev && \
+    zlib1g-dev
 
-    cd /home/$USERNAME/ && \
+RUN cd /home/${USERNAME}/ && \
 
     # Get the main repo
     git clone https://github.com/SDL-Hercules-390/hyperion.git && \
+
+    # Remove Hyperion's distribution bundled amd64 binaries
+    rm -v /home/${USERNAME}/hyperion/crypto/lib/* && \
+    rm -v /home/${USERNAME}/hyperion/decNumber/lib/* && \
+    rm -v /home/${USERNAME}/hyperion/SoftFloat/lib/* && \
+    rm -v /home/${USERNAME}/hyperion/telnet/lib/* && \
 
     # Get the external modules
     git clone https://github.com/SDL-Hercules-390/crypto.git && \
@@ -43,25 +50,26 @@ RUN DEBIAN_FRONTEND=noninteractive \
     git clone https://github.com/SDL-Hercules-390/SoftFloat.git && \
     git clone https://github.com/SDL-Hercules-390/telnet.git
 
-# Detect architecture and word size
+    # Detect architecture and word size
 RUN export ARCH=$( arch ) && \
-    sysvbanner "$ARCH" && \
-    if [ "$ARCH"="x86_64" ]; then \
+    echo "Architecture is $ARCH" && \
+    if [ "$ARCH" == "x86_64" ]; then \
+        echo "Running on x86_64" && \
         export ARCH="amd64"; \
         export WORD_LENGTH=64; \
-    elif [ "$ARCH"="aarch64" ]; then \
+    elif [ "$ARCH" == "aarch64" ]; then \
+        echo "Running on arm64" && \
         export ARCH="aarch64"; \
         export WORD_LENGTH=64; \
-    elif [ "$ARCH"="ppc64le" ]; then \
-        export ARCH="ppc"; \
-        export WORD_LENGTH=64; \
-    elif [ "$ARCH"="ppc64le" ]; then \
+    elif [ "$ARCH" == "ppc64le" ]; then \
+        echo "Running on ppc64le" && \
         export ARCH="ppc"; \
         export WORD_LENGTH=64; \
     else \
         echo "Couldn't translate architecture $ARCH"; \
         exit 1; \
     fi && \
+    echo "Adjusted ARCH is now $ARCH" && \
 
     # Build the external crypto module
     mkdir /home/$USERNAME/crypto32.Release && \
@@ -121,13 +129,13 @@ RUN export ARCH=$( arch ) && \
     mkdir /home/$USERNAME/hyperion/telnet/lib/${ARCH} && \
     cp -v libtelnet*.a /home/$USERNAME/hyperion/telnet/lib/${ARCH}/
 
-    # Build Hercules
+# Build Hercules
 RUN cd /home/$USERNAME/hyperion && \
     ./configure && \
     make install && \
-
     # Remove unwanted files.
     apt purge -y \
+    apt-utils \
     autoconf \
     automake \
     build-essential \
