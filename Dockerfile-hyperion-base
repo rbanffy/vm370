@@ -132,7 +132,12 @@ RUN echo "TARGETARCH is ${TARGETARCH}"; \
 
 # Build Hercules
 RUN cd /home/$USERNAME/hyperion && \
-    # ./configure && \
+    rm -rfv .git && \
+    if [ "${TARGETARCH}" = "arm" ]; then \
+        ./configure -target=arm; \
+    else \
+        ./configure; \
+    fi && \
     # make && \
     # make install && \
     # Remove unwanted files.
