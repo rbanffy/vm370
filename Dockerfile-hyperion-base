@@ -62,11 +62,8 @@ RUN echo "TARGETARCH is ${TARGETARCH}"; \
     elif [ "${TARGETARCH}" = "arm64" ]; then \
         export DEST="aarch64"; \
         export WORD_LENGTH="64"; \
-    elif [ "${TARGETPLATFORM}" = "linux/arm/v7" ]; then \
-        export DEST="armv7l"; \
-        export WORD_LENGTH="32"; \
-    elif [ "${TARGETPLATFORM}" = "linux/arm/v6" ]; then \
-        export DEST="armv6l"; \
+    elif [ "${TARGETARCH}" = "arm" ]; then \
+        export DEST="arm"; \
         export WORD_LENGTH="32"; \
     elif [ "${TARGETARCH}" = "amd64" ]; then \
         export DEST=""; \
