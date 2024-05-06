@@ -69,11 +69,10 @@ RUN echo "TARGETARCH is ${TARGETARCH}"; \
         export DEST=""; \
         export WORD_LENGTH="64"; \
     else \
-        export DEST="${TARGETARCH}"; \
-        export WORD_LENGTH="64"; \
+        echo "Unsuported platform ${TARGETPLATFORM}"; \
+        exit 3; \
     fi && \
     echo "${TARGETARCH} mapped to \"$DEST\""; \
-
     # Build the external crypto module
     if [ "$WORD_LENGTH" = "32" ]; then \
         mkdir -v /home/$USERNAME/crypto32.Release && \
