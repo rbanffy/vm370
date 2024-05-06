@@ -87,7 +87,6 @@ RUN echo "TARGETARCH is ${TARGETARCH}"; \
     fi && \
     mkdir -pv /home/$USERNAME/hyperion/crypto/lib/${DEST} && \
     cp -v libcrypto*.a /home/$USERNAME/hyperion/crypto/lib/${DEST} && \
-
     # Build the external decNumber module
     if [ "$WORD_LENGTH" = "32" ]; then \
         mkdir -v /home/$USERNAME/decNumber32.Release && \
@@ -102,7 +101,6 @@ RUN echo "TARGETARCH is ${TARGETARCH}"; \
     fi && \
     mkdir -pv /home/$USERNAME/hyperion/decNumber/lib/${DEST} && \
     cp -v libdecNumber*.a /home/$USERNAME/hyperion/decNumber/lib/${DEST} && \
-
     # Build the external SoftFloat module
     if [ "$WORD_LENGTH" = "32" ]; then \
         mkdir -v /home/$USERNAME/SoftFloat32.Release && \
@@ -117,8 +115,7 @@ RUN echo "TARGETARCH is ${TARGETARCH}"; \
     fi && \
     mkdir -pv /home/$USERNAME/hyperion/SoftFloat/lib/${DEST} && \
     cp -v libSoftFloat*.a /home/$USERNAME/hyperion/SoftFloat/lib/${DEST} && \
-
-        # Build the external telnet module
+    # Build the external telnet module
     if [ "$WORD_LENGTH" = "32" ]; then \
         mkdir -v /home/$USERNAME/telnet32.Release && \
         cd /home/$USERNAME/telnet32.Release && \
