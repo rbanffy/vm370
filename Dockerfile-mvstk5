@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 FROM debian:testing-slim
 
 LABEL maintainer="Ricardo Bánffy <rbanffy@gmail.com>"
@@ -15,7 +17,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
         apt upgrade -y && \
         apt install -y --no-install-recommends hercules wget unzip && \
         cd /home/$USERNAME && \
-        # Copy the emultor configuration and disk/tape images.
+        # Copy the emulator configuration and disk/tape images.
         mv /tmp/mvs-tk5 . && \
         cd mvs-tk5 && \
         chmod +x mvs mvs_ipl mvs_osx start_herc && \

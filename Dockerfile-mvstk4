@@ -1,4 +1,6 @@
-FROM ${USER}/hercules-base:latest
+# syntax=docker/dockerfile:1
+
+FROM debian:stable-slim
 
 LABEL maintainer="Ricardo Bánffy <rbanffy@gmail.com>"
 
@@ -13,7 +15,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
         # apt upgrade -y && \
         # apt install -y --no-install-recommends hercules wget unzip ca-certificates && \
         cd /home/$USERNAME && \
-        # Dowload the emultor configuration and disk/tape images.
+        # Dowload the emulator configuration and disk/tape images.
         wget -q https://mvstk4.s3.amazonaws.com/tk4-_v1.00_current.zip && \
         wget -q https://mvstk4.s3.amazonaws.com/tk4-cbt.zip && \
         wget -q https://mvstk4.s3.amazonaws.com/tk4-source.zip && \
