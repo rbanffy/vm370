@@ -9,11 +9,11 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
 RUN DEBIAN_FRONTEND=noninteractive \
-        # groupadd --gid $USER_GID $USERNAME && \
-        # useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
-        # apt update && \
-        # apt upgrade -y && \
-        # apt install -y --no-install-recommends hercules wget unzip ca-certificates && \
+        groupadd --gid $USER_GID $USERNAME && \
+        useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
+        apt-get update && \
+        apt-get upgrade -y && \
+        apt-get install -y --no-install-recommends hercules wget unzip ca-certificates && \
         cd /home/$USERNAME && \
         # Dowload the emulator configuration and disk/tape images.
         wget -q https://mvstk4.s3.amazonaws.com/tk4-_v1.00_current.zip && \
@@ -23,8 +23,8 @@ RUN DEBIAN_FRONTEND=noninteractive \
         unzip -o tk4-cbt.zip && \
         unzip -o tk4-source.zip && \
         # Remove unwanted files.
-        apt purge -y wget unzip ca-certificates && \
-        apt -y autoremove && \
+        apt-get purge -y wget unzip ca-certificates && \
+        apt-get -y autoremove && \
         rm -rf /var/lib/apt/lists/* *.zip && \
         chown -R $USERNAME:$USERNAME /home/$USERNAME
 

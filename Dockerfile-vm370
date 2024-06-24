@@ -11,9 +11,9 @@ ARG USER_GID=$USER_UID
 RUN DEBIAN_FRONTEND=noninteractive \
         groupadd --gid $USER_GID $USERNAME && \
         useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
-        apt update && \
-        apt upgrade -y && \
-        apt install -y --no-install-recommends hercules wget unzip && \
+        apt-get update && \
+        apt-get upgrade -y && \
+        apt-get install -y --no-install-recommends hercules wget unzip && \
         cd /home/$USERNAME && \
         # Dowload the emulator configuration and disk/tape images
         wget -q http://www.smrcc.org.uk/members/g4ugm/vm-370/vm370sixpack-1_3.zip && \
@@ -26,8 +26,8 @@ RUN DEBIAN_FRONTEND=noninteractive \
         # Log off the OPERATOR user from the Hercules console
         echo '/LOGOFF' >> hercules.rc && \
         # Remove unwanted files.
-        apt purge -y wget unzip && \
-        apt -y autoremove && \
+        apt-get purge -y wget unzip && \
+        apt-get -y autoremove && \
         # Remove the APT package information.
         rm -rf /var/lib/apt/lists/* && \
         # Remove the files we downloaded.

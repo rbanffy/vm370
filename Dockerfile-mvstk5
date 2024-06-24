@@ -13,16 +13,17 @@ COPY build/mvs-tk5 /tmp/mvs-tk5
 RUN DEBIAN_FRONTEND=noninteractive \
         groupadd --gid $USER_GID $USERNAME && \
         useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
-        apt update && \
-        apt upgrade -y && \
-        apt install -y --no-install-recommends hercules wget unzip && \
+        apt-get update && \
+        apt-get upgrade -y && \
+        apt-get install -y --no-install-recommends hercules wget unzip && \
         cd /home/$USERNAME && \
         # Copy the emulator configuration and disk/tape images.
         mv /tmp/mvs-tk5 . && \
         cd mvs-tk5 && \
         chmod +x mvs mvs_ipl mvs_osx start_herc && \
         # Remove unwanted files.
-        apt purge -y wget unzip && \
+        apt-get purge -y wget unzip && \
+        apt-get -y autoremove && \
         rm -rf /var/lib/apt/lists/* /*.zip && \
         chown -R $USERNAME:$USERNAME /home/$USERNAME
 
