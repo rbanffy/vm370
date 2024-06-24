@@ -54,12 +54,12 @@ ${USER}-${OPERATING_SYSTEM}-${IMAGE_TAG}-amd64.tar: Dockerfile-${OPERATING_SYSTE
 	docker save -o ${BUILD_DIR}/${USER}-${OPERATING_SYSTEM}-${IMAGE_TAG}-amd64.tar ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64
 
 build: distribution ## Builds the Docker images
-	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64 --platform=linux/amd64 --file ./Dockerfile-${OPERATING_SYSTEM} .
-	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-arm64 --platform=linux/arm64 --file ./Dockerfile-${OPERATING_SYSTEM} .
-	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv6 --platform=linux/arm/v6 --file ./Dockerfile-${OPERATING_SYSTEM} .
-	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv7 --platform=linux/arm/v7 --file ./Dockerfile-${OPERATING_SYSTEM} .
-	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-s390x --platform=linux/s390x --file ./Dockerfile-${OPERATING_SYSTEM} .
-	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-ppc64le --platform=linux/ppc64le --file ./Dockerfile-${OPERATING_SYSTEM} .
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64 --platform=linux/amd64 --file ./Dockerfile-${OPERATING_SYSTEM} --progress plain .
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-arm64 --platform=linux/arm64 --file ./Dockerfile-${OPERATING_SYSTEM} --progress plain .
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv6 --platform=linux/arm/v6 --file ./Dockerfile-${OPERATING_SYSTEM} --progress plain .
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-armv7 --platform=linux/arm/v7 --file ./Dockerfile-${OPERATING_SYSTEM} --progress plain .
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-s390x --platform=linux/s390x --file ./Dockerfile-${OPERATING_SYSTEM} --progress plain .
+	docker build -t ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-ppc64le --platform=linux/ppc64le --file ./Dockerfile-${OPERATING_SYSTEM} --progress plain .
 
 upload_images: ## Uploads the local docker images
 	docker image push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-amd64
