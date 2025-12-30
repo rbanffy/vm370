@@ -85,7 +85,7 @@ Both come preconfigured with multiple users:
 
 The user MAINT can see the other users in the `USERS DIRECT` file.
 
-### MVSTk4
+### MVSTk4-
 
 This is an MVS 3.8j (the last version of MVS that can be legally deployed without a license - and an actual mainframe), with numerous improvements, fixes, and extras.
 
