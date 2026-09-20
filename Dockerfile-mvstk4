@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
 
-FROM debian:stable-slim
+ARG BASE_IMAGE=debian:stable-slim
+FROM ${BASE_IMAGE}
 
 LABEL maintainer="Ricardo Bánffy <rbanffy@gmail.com>"
 
@@ -31,7 +32,7 @@ RUN DEBIAN_FRONTEND=noninteractive \
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
-EXPOSE 3270/TCP
-EXPOSE 8038/TCP
+EXPOSE 3270/tcp
+EXPOSE 8038/tcp
 
 CMD ["./mvs"]

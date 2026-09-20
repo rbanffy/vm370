@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
 
-FROM debian:testing-slim
+ARG BASE_IMAGE=debian:stable-slim
+FROM ${BASE_IMAGE}
 
 LABEL maintainer="Ricardo Bánffy <rbanffy@gmail.com>"
 
@@ -9,18 +10,22 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
 RUN DEBIAN_FRONTEND=noninteractive \
+        echo Adding group $USER_GID with name $USERNAME && \
         groupadd --gid $USER_GID $USERNAME && \
+        echo Adding user $USERNAME \($USER_UID\) with group $USER_GID && \
         useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
         apt-get update && \
         apt-get upgrade -y && \
-        apt-get install -y --no-install-recommends hercules wget unzip && \
+        apt-get install -y --no-install-recommends hercules ca-certificates && \
+        apt-get purge -y ca-certificates && \
+        apt-get -y autoremove && \
+        rm -rf /var/lib/apt/lists/*
+
+COPY VM370CE.V1.R1.2 /home/$USERNAME/
+COPY vm370sixpack-1_3 /home/$USERNAME/e
+
+RUN chown -R $USERNAME:$USERNAME /home/$USERNAME && \
         cd /home/$USERNAME && \
-        # Dowload the emulator configuration and disk/tape images
-        wget -q http://www.vm370.org/sites/default/files/2022-07/VM370CE.V1.R1.2.zip && \
-        wget -q http://dosvs.31bits.net/DOSVS_5Pack_V1.0-full.zip && \
-        unzip VM370CE.V1.R1.2.zip && \
-        mv VM370CE.V1.R1.2/* . && \
-        unzip DOSVS_5Pack_V1.0-full.zip -d disks && \
         # Enable DOS/VS devices.
         sed -i 's/#0361/0361/' vm370ce.conf && \
         sed -i 's/#0362/0362/' vm370ce.conf && \
@@ -30,19 +35,20 @@ RUN DEBIAN_FRONTEND=noninteractive \
         sed -i 's/#HTTPPORT       8081/HTTPPORT    8081    AUTH MAINT CPCMS/' vm370ce.conf && \
         # Log off the OPERATOR user from the Hercules console
         echo '/LOGOFF' >> hercules.rc && \
-        # Remove unwanted files.
-        apt-get purge -y wget unzip && \
-        apt-get -y autoremove && \
-        # Remove the APT package information.
-        rm -rf /var/lib/apt/lists/* && \
-        # Remove the files we downloaded.
-        rm -rf VM370CE.V1.R1.2.zip WC3270 VM370CE.V1.R1.2 DOSVS_5Pack_V1.0-full.zip && \
-        chown -R $USERNAME:$USERNAME /home/$USERNAME
+        # Create startup script to handle PRINTER replacement
+        echo '#!/bin/sh' > start.sh && \
+        echo 'if [ -n "$PRINTER" ]; then' >> start.sh && \
+        echo '    sed -i "s|io/print1.listing|$PRINTER|g" sixpack.conf' >> start.sh && \
+        echo 'fi' >> start.sh && \
+        echo 'exec hercules -f sixpack.conf' >> start.sh && \
+        chmod +x start.sh && \
+        # Remove unwanted files
+        rm -f *.pdf vm370ce.cmd vm370ce.sh
 
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
-EXPOSE 3270/TCP
-EXPOSE 8081/TCP
+EXPOSE 3270/tcp
+EXPOSE 8081/tcp
 
-CMD ["hercules", "-f", "vm370ce.conf"]
+CMD ["./start.sh"]

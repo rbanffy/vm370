@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
 
-FROM debian:testing-slim
+ARG BASE_IMAGE=debian:stable-slim
+FROM ${BASE_IMAGE}
 
 LABEL maintainer="Ricardo Bánffy <rbanffy@gmail.com>"
 
@@ -9,14 +10,16 @@ ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
 RUN DEBIAN_FRONTEND=noninteractive \
+        echo Adding group $USER_GID with name $USERNAME && \
         groupadd --gid $USER_GID $USERNAME && \
+        echo Adding user $USERNAME \($USER_UID\) with group $USER_GID && \
         useradd --uid $USER_UID --gid $USER_GID -m $USERNAME && \
         apt-get update && \
         apt-get upgrade -y && \
-        apt-get install -y --no-install-recommends hercules wget unzip && \
+        apt-get install -y --no-install-recommends hercules wget unzip ca-certificates && \
         cd /home/$USERNAME && \
         # Dowload the emulator configuration and disk/tape images
-        wget -q http://www.smrcc.org.uk/members/g4ugm/vm-370/vm370sixpack-1_3.zip && \
+        wget -q https://vm370.org/sites/default/files/software/vm370sixpack-1_3.zip && \
         unzip vm370sixpack-1_3.zip && \
         # Enable CMS/DOS disks.
         sed -i 's/#06a0/06a0/' sixpack.conf && \
@@ -25,19 +28,26 @@ RUN DEBIAN_FRONTEND=noninteractive \
         sed -i 's/#HTTPPORT       8081/HTTPPORT    8081    AUTH MAINT CPCMS/' sixpack.conf && \
         # Log off the OPERATOR user from the Hercules console
         echo '/LOGOFF' >> hercules.rc && \
+        # Create startup script to handle PRINTER replacement
+        echo '#!/bin/sh' > start.sh && \
+        echo 'if [ -n "$HERC_PRINTER" ]; then' >> start.sh && \
+        echo '    sed -i "s|io/print1.listing|$HERC_PRINTER|g" sixpack.conf' >> start.sh && \
+        echo 'fi' >> start.sh && \
+        echo 'exec hercules -d -f sixpack.conf' >> start.sh && \
+        chmod +x start.sh && \
         # Remove unwanted files.
-        apt-get purge -y wget unzip && \
+        apt-get purge -y wget unzip ca-certificates && \
         apt-get -y autoremove && \
         # Remove the APT package information.
         rm -rf /var/lib/apt/lists/* && \
         # Remove the files we downloaded.
-        rm -rf /var/lib/apt/lists/* vm370sixpack-1_3.zip WC3270 && \
+        rm -rfv /var/lib/apt/lists/* vm370sixpack-1_3.zip WC3270 sixpack.cmd To_Do.txt sixpack.sh && \
         chown -R $USERNAME:$USERNAME /home/$USERNAME
 
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
-EXPOSE 3270/TCP
-EXPOSE 8081/TCP
+EXPOSE 3270/tcp
+EXPOSE 8081/tcp
 
-CMD ["hercules", "-f", "sixpack.conf"]
+CMD ["./start.sh"]
