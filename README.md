@@ -34,6 +34,17 @@ set the variable OPERATING_SYSTEM.
 OPERATING_SYSTEM=vm370ce make build
 ```
 
+## Building for a subset of architectures
+
+By default we'll build for all supported architectures (amd64, armv6, armv7,
+arm64, s390x, ppc64le). To build (or upload) only some of them, set the
+variable ARCH to a space-separated list.
+
+```shell
+ARCH=amd64 make build
+ARCH="amd64 arm64" make build
+```
+
 ## Running from Docker Hub
 
 To run the VM370 Six Pack image without building it locally, use:
