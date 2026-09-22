@@ -22,7 +22,7 @@ docker run -it -p 3270:3270 -p 8081:8081 $USER/vm370:latest-amd64
 ```
 
 At this point, you can connect your terminals to localhost on port 3278. To
-get to the web console, connect to http://localhost:8081 using the credentials
+get to the web console, connect to <http://localhost:8081> using the credentials
 for the MAINT user (as published in the Sixpack documentation).
 
 ## Building an image with other OSs

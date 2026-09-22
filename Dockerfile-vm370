@@ -9,6 +9,8 @@ ARG USERNAME=hercules
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
+WORKDIR /home/$USERNAME
+
 RUN DEBIAN_FRONTEND=noninteractive \
         echo Adding group $USER_GID with name $USERNAME && \
         groupadd --gid $USER_GID $USERNAME && \
@@ -17,7 +19,6 @@ RUN DEBIAN_FRONTEND=noninteractive \
         apt-get update && \
         apt-get upgrade -y && \
         apt-get install -y --no-install-recommends hercules wget unzip ca-certificates && \
-        cd /home/$USERNAME && \
         # Dowload the emulator configuration and disk/tape images
         wget -q https://vm370.org/sites/default/files/software/vm370sixpack-1_3.zip && \
         unzip vm370sixpack-1_3.zip && \
@@ -30,8 +31,8 @@ RUN DEBIAN_FRONTEND=noninteractive \
         echo '/LOGOFF' >> hercules.rc && \
         # Create startup script to handle PRINTER replacement
         echo '#!/bin/sh' > start.sh && \
-        echo 'if [ -n "$HERC_PRINTER" ]; then' >> start.sh && \
-        echo '    sed -i "s|io/print1.listing|$HERC_PRINTER|g" sixpack.conf' >> start.sh && \
+        echo "if [ -n \"\$HERC_PRINTER\" ]; then" >> start.sh && \
+        echo "    sed -i \"s|io/print1.listing|\$HERC_PRINTER|g\" sixpack.conf" >> start.sh && \
         echo 'fi' >> start.sh && \
         echo 'exec hercules -d -f sixpack.conf' >> start.sh && \
         chmod +x start.sh && \

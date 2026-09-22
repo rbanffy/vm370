@@ -24,8 +24,9 @@ RUN DEBIAN_FRONTEND=noninteractive \
 COPY VM370CE.V1.R1.2 /home/$USERNAME/
 COPY vm370sixpack-1_3 /home/$USERNAME/e
 
+WORKDIR /home/$USERNAME
+
 RUN chown -R $USERNAME:$USERNAME /home/$USERNAME && \
-        cd /home/$USERNAME && \
         # Enable DOS/VS devices.
         sed -i 's/#0361/0361/' vm370ce.conf && \
         sed -i 's/#0362/0362/' vm370ce.conf && \
@@ -37,13 +38,13 @@ RUN chown -R $USERNAME:$USERNAME /home/$USERNAME && \
         echo '/LOGOFF' >> hercules.rc && \
         # Create startup script to handle PRINTER replacement
         echo '#!/bin/sh' > start.sh && \
-        echo 'if [ -n "$PRINTER" ]; then' >> start.sh && \
-        echo '    sed -i "s|io/print1.listing|$PRINTER|g" sixpack.conf' >> start.sh && \
+        echo "if [ -n \"\$PRINTER\" ]; then" >> start.sh && \
+        echo "    sed -i \"s|io/print1.listing|\$PRINTER|g\" sixpack.conf" >> start.sh && \
         echo 'fi' >> start.sh && \
         echo 'exec hercules -f sixpack.conf' >> start.sh && \
         chmod +x start.sh && \
         # Remove unwanted files
-        rm -f *.pdf vm370ce.cmd vm370ce.sh
+        rm -f ./*.pdf vm370ce.cmd vm370ce.sh
 
 USER $USERNAME
 WORKDIR /home/$USERNAME
