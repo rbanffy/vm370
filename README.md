@@ -74,7 +74,7 @@ get you to the VM370 welcome screen.
 ### A warning
 
 The web-based Hercules console is not working properly for the VM370 images at
-the moment, but work correctly with MVS 3.8 Tk4- on port 8038.
+the moment, but works correctly with MVS 3.8 Tk4- on port 8038.
 
 A more serious issue is that data is not persisted beyond the life of the
 container, or when the workload is moved to a new node. Use it at your own
