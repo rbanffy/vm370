@@ -1,3 +1,9 @@
+## Unreleased
+
+- Add ARCH selection for architecture-specific image builds and uploads
+- Publish platform-specific image manifests before creating the multi-platform manifest
+- Add pre-commit validation for Makefiles, Dockerfiles, and Markdown files
+
 ## 1.4
 
 - Improve image tagging ("latest" is from develop, "stable" is from main)
