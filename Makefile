@@ -63,13 +63,22 @@ build: distribution ## Builds the Docker images (set ARCH to build a subset)
 
 upload_images: ## Uploads the local docker images (set ARCH to upload a subset)
 	@for arch in $(ARCHES); do \
-		docker image push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-$$arch || exit 1; \
+		case $$arch in \
+			amd64) platform=linux/amd64 ;; \
+			armv6) platform=linux/arm/v6 ;; \
+			armv7) platform=linux/arm/v7 ;; \
+			arm64) platform=linux/arm64 ;; \
+			s390x) platform=linux/s390x ;; \
+			ppc64le) platform=linux/ppc64le ;; \
+			*) echo "Unknown ARCH: $$arch (expected one of: $(ALL_ARCHES))" >&2; exit 1 ;; \
+		esac; \
+		docker image push --platform=$$platform ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-$$arch || exit 1; \
 	done
 
 upload: upload_images ## Uploads the manifest (set ARCH to include a subset)
-	@amends=""; \
+	@images=""; \
 	for arch in $(ARCHES); do \
-		amends="$$amends --amend ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-$$arch"; \
+		images="$$images ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}-$$arch"; \
 	done; \
-	docker manifest create ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG} $$amends; \
+	docker manifest create --amend ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG} $$images; \
 	docker manifest push ${USER}/${OPERATING_SYSTEM}:${IMAGE_TAG}
